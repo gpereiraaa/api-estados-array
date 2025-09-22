@@ -40,6 +40,8 @@ app.use((request, response, next) => {
 // Response --> Envia os dados na API
 
 // EndPoints
+
+// Retorna a lista de estados 
 app.get('/v1/estados', function(request, response){
     let estados = dados.getAllEstados()
 
@@ -47,10 +49,49 @@ app.get('/v1/estados', function(request, response){
     response.json(estados)
 })
 
+// Retorna dados do estado filtrando pela sigla
 app.get('/v1/estado/:uf', function(request, response){
     let sigla = request.params.uf
+    let estado = dados.getEstadoBySigla(sigla)
 
-    console.log(sigla)
+    response.status(estado.statuscode)
+    response.json(estado)
+})
+
+// Retorna a capital do estado filtrando pela sigla
+app.get('/v1/estado/capital/:uf', function(request, response){
+    let sigla = request.params.uf
+    let capital = dados.getCapitalBySigla(sigla)
+
+    response.status(capital.statuscode)
+    response.json(capital)
+})
+
+// Retorna a lista de estados filtrando pela região
+app.get('/v1/estados/regiao/:regiao', function(request, response){
+    let regiao = request.params.regiao
+    let estados = dados.getEstadosByRegiao(regiao)
+
+    response.status(estados.statuscode)
+    response.json(estados)
+})
+
+// Retorna a lista de estados que formam a capital de um país filtrando pelo país
+app.get('/v1/capitais/:pais', function(request, response){
+    let pais = request.params.pais
+    let capitais = dados.getEstadoIsCapitalByCountry(pais)
+
+    response.status(capitais.statuscode)
+    response.json(capitais)
+})
+
+// Retorna as cidades existente em um estado, filtrando pela sigla
+app.get('/v1/estado/cidade/:uf', function(request, response) {
+    let sigla = request.params.uf
+    let cidades = dados.getCidadesBySigla(sigla)
+
+    response.status(cidades.statuscode)
+    response.json(cidades)
 })
 /*
 Exemplo de query e params:
